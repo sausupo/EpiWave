@@ -28,9 +28,9 @@ function App() {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    // return () => {
+    //   window.removeEventListener('beforeunload', handleBeforeUnload);
+    // };
   }, []);
 
   // const videoRef1 = useRef<HTMLVideoElement>(null);
