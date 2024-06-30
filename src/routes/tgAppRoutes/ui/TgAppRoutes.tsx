@@ -12,6 +12,7 @@ export default function TgAppRoutes(): JSX.Element {
         {Object.keys(AppRoutes).map((key) => (
           <Route
             // index
+            key={key}
             path={AppRoutes[key as TgAppRouteNames].path}
             element={AppRoutes[key as TgAppRouteNames].element}
           />
