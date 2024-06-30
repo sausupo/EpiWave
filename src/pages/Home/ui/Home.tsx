@@ -4,10 +4,20 @@ import { Clicker } from "../../../widgets/Clicker";
 import useClicker from "../../../store/useClicker";
 import { useUserData } from "../../../store";
 import { formatNumberWithoutCurrency } from "../../../shared/funcs";
+import { useEffect } from "react";
+import { ENERGY_MAX } from "../../../shared/config";
 
 export default function Home(): JSX.Element {
-  const count = useClicker((state) => state.count);
+  const {count, energy, energyIncrement} = useClicker((state) => state);
   const fisrtName = useUserData((state) => state.firstName);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      energyIncrement(intervalId);
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className="home-page">
@@ -21,7 +31,7 @@ export default function Home(): JSX.Element {
       <Clicker />
       <div className="home-page__energy">
         <div>⚡</div>
-        <div className="home-page__energy__text ">1500/1500</div>
+        <div className="home-page__energy__text ">{`${energy}/${ENERGY_MAX}`}</div>
       </div>
     </div>
   );

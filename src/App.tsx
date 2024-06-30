@@ -5,9 +5,33 @@ import { useUserData } from "./store";
 import { BottomNavigation } from "./widgets/BottomNavigation";
 import TgAppRoutes from "./routes/tgAppRoutes/ui/TgAppRoutes";
 import bgMain from "./assets/bg.mp4";
+import useClicker from "./store/useClicker";
+
+const sendData = (count: number, energy: number) => {
+  WebApp.CloudStorage.setItem("count", String(count));
+  WebApp.CloudStorage.setItem("count", String(energy));
+}
 
 function App() {
-  const { init } = useUserData((state) => state);
+  const userDataInit = useUserData((state) => state.init);
+  const clickerInit = useClicker(state => state.init);
+  const clickerIsLoading = useClicker(state => state.isLoading);
+  const {count, energy} = useClicker(state => state);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      sendData(count, energy);
+      // Если нужно показать предупреждение при закрытии окна
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   // const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
@@ -21,8 +45,17 @@ function App() {
   // };
 
   useEffect(() => {
-    init(WebApp.initDataUnsafe.user ?? ({} as any));
+    clickerInit();
+    userDataInit(WebApp.initDataUnsafe.user ?? ({} as any));
   }, []);
+
+  if (clickerIsLoading) {
+    return (
+    <div>
+      Loading...
+    </div>
+    );
+  }
 
   return (
     <>

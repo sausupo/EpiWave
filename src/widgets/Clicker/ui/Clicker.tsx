@@ -3,7 +3,7 @@ import useClicker from "../../../store/useClicker";
 import clicker from "../../../assets/clicker.png";
 import "./Clicker.css";
 import { useState } from "react";
-import { INCREMENT_VALUE } from "../../../shared/config";
+import { ENERGY_DECREMENT, INCREMENT_VALUE } from "../../../shared/config";
 import { v4 as uuidv4 } from 'uuid';
 import clickerBgVideo from "../../../assets/2.mp4";
 
@@ -14,13 +14,14 @@ interface NumberPosition {
 }
 
 export default function Clicker(): JSX.Element {
-  const increment = useClicker((state) => state.increment);
+  const {increment, energyDecrement, energy} = useClicker((state) => state);
 
   const [numbers, setNumbers] = useState<NumberPosition[]>([]);
   const [scaleX, setScaleX] = useState(1);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     increment();
+    energyDecrement();
     WebApp.HapticFeedback.impactOccurred("light");
     const { touches } = event;
     const newNumbers: NumberPosition[] = []
@@ -58,7 +59,7 @@ export default function Clicker(): JSX.Element {
         
       ))}
       <div
-      onTouchStart={handleClick}
+      onTouchStart={energy > ENERGY_DECREMENT ? handleClick : () => {}}
       onTouchEnd={handleTouchEnd}
       className="clicker"
       style={{ transform: `scaleX(${scaleX})` }}
