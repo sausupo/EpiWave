@@ -5,6 +5,7 @@ import "./Clicker.css";
 import { useState } from "react";
 import { INCREMENT_VALUE } from "../../../shared/config";
 import { v4 as uuidv4 } from 'uuid';
+import clickerBgVideo from "../../../assets/2.mp4";
 
 interface NumberPosition {
   id: string;
@@ -21,7 +22,7 @@ export default function Clicker(): JSX.Element {
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     increment();
     WebApp.HapticFeedback.impactOccurred("light");
-    const { touches } = event; // Получение данных о касании
+    const { touches } = event;
     const newNumbers: NumberPosition[] = []
     for (let i = 0; i < touches.length; i++) {
       const touch = touches[i];
@@ -34,7 +35,7 @@ export default function Clicker(): JSX.Element {
       newNumbers.push(newNumber);
     }
 
-    setNumbers([...numbers, ...newNumbers]); // Добавление числа в состояние
+    setNumbers([...numbers, ...newNumbers]);
     setScaleX(0.98);
   };
 
@@ -57,15 +58,16 @@ export default function Clicker(): JSX.Element {
         
       ))}
       <div
-      // onTouchStart={handleClick}
       onTouchStart={handleClick}
       onTouchEnd={handleTouchEnd}
       className="clicker"
       style={{ transform: `scaleX(${scaleX})` }}
     >
-     
       <div className="glass">
         <img src={clicker} className="home-page__ff" alt="coin" />
+        <video className="clicker-bg" playsInline autoPlay muted loop id="bgvid">
+          <source src={clickerBgVideo} type="video/mp4"/>
+        </video>
       </div>
     </div>
       </>
