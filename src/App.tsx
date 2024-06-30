@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     clickerInit();
     userDataInit(WebApp.initDataUnsafe.user ?? ({} as any));
-    WebApp.onEvent('backButtonClicked', () => sendData(count, energy))
+    WebApp.onEvent('popupClosed', () => sendData(count, energy))
   }, []);
 
   if (clickerIsLoading) {
