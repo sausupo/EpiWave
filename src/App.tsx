@@ -19,18 +19,17 @@ function App() {
   const {count, energy} = useClicker(state => state);
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       sendData(count, energy);
-      // Если нужно показать предупреждение при закрытии окна
-      event.preventDefault();
-      event.returnValue = '';
     };
 
+    window.addEventListener('unload', handleBeforeUnload);
     window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // return () => {
-    //   window.removeEventListener('beforeunload', handleBeforeUnload);
-    // };
+    return () => {
+      window.removeEventListener('unload', handleBeforeUnload);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   // const videoRef1 = useRef<HTMLVideoElement>(null);
