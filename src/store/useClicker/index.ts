@@ -19,15 +19,14 @@ type Actions = {
 const useClicker = create<Store & Actions>((set) => ({
     clickable: false,
     isLoading: false,
-    energy: 1450,
+    energy: 1500,
     count: 0,
     init: () => {
         WebApp.CloudStorage.getItems(["count", "energy"], (error, result) => {
-            debugger;
             if (!error && result) {
                 set({
-                    count: Number(result.count) || 5000,
-                    energy: Number(result.energy) || 1500,
+                    count: result.count ? Number(result.count) : 5000,
+                    energy: result.energy ? Number(result.energy) : 1500,
                     isLoading: false,
                 })
             } else {
