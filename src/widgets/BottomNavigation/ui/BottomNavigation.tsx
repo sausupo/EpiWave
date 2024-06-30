@@ -15,8 +15,6 @@ export default function BottomNavigation(): JSX.Element {
     navigate(AppRoutes[key as TgAppRouteNames].path);
   };
 
-  console.log(AppRoutes);
-
   return (
     <div className="navbar">
       <div className="menu">

@@ -22,9 +22,11 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => sendData(count, energy));
+    window.addEventListener('unload', () => sendData(count, energy));
 
     return () => {
       window.removeEventListener('beforeunload', () => sendData(count, energy));
+      window.addEventListener('unload', () => sendData(count, energy));
     };
   }, [count, energy]);
 
