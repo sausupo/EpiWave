@@ -9,7 +9,7 @@ import useClicker from "./store/useClicker";
 
 const sendData = (count: number, energy: number) => {
   WebApp.CloudStorage.setItem("count", String(count));
-  WebApp.CloudStorage.setItem("count", String(energy));
+  WebApp.CloudStorage.setItem("energy", String(energy));
 }
 
 function App() {
@@ -21,9 +21,16 @@ function App() {
   const videoRef2 = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    window.addEventListener('beforeunload', () => sendData(count, energy));
+
+    return () => {
+      window.removeEventListener('beforeunload', () => sendData(count, energy));
+    };
+  }, [count, energy]);
+
+  useEffect(() => {
     clickerInit();
     userDataInit(WebApp.initDataUnsafe.user ?? ({} as any));
-    WebApp.onEvent('popupClosed', () => sendData(count, energy))
   }, []);
 
   if (clickerIsLoading) {
