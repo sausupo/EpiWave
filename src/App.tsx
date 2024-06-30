@@ -7,31 +7,23 @@ import TgAppRoutes from "./routes/tgAppRoutes/ui/TgAppRoutes";
 import bgMain from "./assets/bg.mp4";
 import useClicker from "./store/useClicker";
 
-// const sendData = (count: number, energy: number) => {
-//   WebApp.CloudStorage.setItem("count", String(count));
-//   WebApp.CloudStorage.setItem("count", String(energy));
-// }
+const sendData = (count: number, energy: number) => {
+  WebApp.CloudStorage.setItem("count", String(count));
+  WebApp.CloudStorage.setItem("count", String(energy));
+}
 
 function App() {
   const userDataInit = useUserData((state) => state.init);
   const clickerInit = useClicker(state => state.init);
   const clickerIsLoading = useClicker(state => state.isLoading);
-  // const {count, energy} = useClicker(state => state);
+  const {count, energy} = useClicker(state => state);
 
-  // const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
-  
-  // const handleEnded = () => {
-  //   if (videoRef2.current && videoRef1.current) {
-  //     videoRef2.current.style.display = 'block';
-  //     videoRef1.current.style.display = 'none';
-  //     videoRef2.current.play();
-  //   }
-  // };
 
   useEffect(() => {
     clickerInit();
     userDataInit(WebApp.initDataUnsafe.user ?? ({} as any));
+    WebApp.onEvent('backButtonClicked', () => sendData(count, energy))
   }, []);
 
   if (clickerIsLoading) {
