@@ -49,7 +49,7 @@ export default function Friends(): JSX.Element {
         <a href="https://t.me/share/url?url=http://t.me/epi_wave_bot/start?startapp=refId531385296&text=Tipa Refka ia hz">
   Share Me
 </a>
-        <a href="https://t.me/share/url?url=http://t.me/epi_wave_bot/start?startapp=refId531385296&text=Tipa Refka ia hz" className="friends-page__total__button">invite</a>
+        <a href="https://t.me/share/url?url=http://t.me/epi_wave_bot/start?startapp=refId531385296&text=Tipa Refka ia hz" className="friends-page__total__button" onClick={handleClick}>invite</a>
       </div>
       <div className="friends-page__list">
         {friends.map((friend) => (
