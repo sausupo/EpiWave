@@ -5,11 +5,13 @@ import { ReferalsIcon } from "../../icons/ReferalsIcon";
 import { TasksIcons } from "../../icons/TasksIcon";
 import { Tasks } from "../../pages/Tasks";
 import { Friends } from "../../pages/Friends";
+import { CloseIcon } from "../../icons/CloseIcon";
 
 export enum TgAppRouteNames {
   HOME = "home",
   TASKS = "tasks",
   REFERALS = "referals",
+  SOON = "soon",
 }
 
 type Page = {
@@ -17,6 +19,7 @@ type Page = {
   label: string;
   element: ReactNode;
   svg: string;
+  disabled?: boolean;
 };
 
 export const AppRoutes: Record<TgAppRouteNames, Page> = {
@@ -37,5 +40,12 @@ export const AppRoutes: Record<TgAppRouteNames, Page> = {
     label: "Friends",
     element: <Friends />,
     svg: ReferalsIcon,
+  },
+  [TgAppRouteNames.SOON]: {
+    path: "/soon",
+    label: "SOON",
+    element: <Home />,
+    svg: CloseIcon,
+    disabled: true,
   },
 };

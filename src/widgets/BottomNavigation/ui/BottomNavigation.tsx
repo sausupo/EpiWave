@@ -10,6 +10,10 @@ export default function BottomNavigation(): JSX.Element {
   const [currentPage, setCurrentPage] = useState(TgAppRouteNames.HOME);
 
   const handleClick = (key: TgAppRouteNames) => {
+    if (AppRoutes[key as TgAppRouteNames].disabled) {
+      return;
+    }
+
     setCurrentPage(key);
     WebApp.HapticFeedback.impactOccurred("medium");
     navigate(AppRoutes[key as TgAppRouteNames].path);
@@ -22,12 +26,10 @@ export default function BottomNavigation(): JSX.Element {
           <div
             key={key}
             onClick={() => handleClick(key as TgAppRouteNames)}
-            className={`bloc-icon ${currentPage === key ? "bloc-active" : ""}`}
+            className={`bloc-icon ${currentPage === key ? "bloc-active" : ""} ${AppRoutes[key as TgAppRouteNames].disabled ? "bloc-disabled" : ""}`}
           >
-            {/* <img className="navbar--icon" src={icon} alt=""/> */}
-            {/* <Icon/> */}
             <div
-              className="navbar--icon"
+              className={`navbar--icon ${AppRoutes[key as TgAppRouteNames].disabled ? "navbar--icon--disabled" : ""}`}
               dangerouslySetInnerHTML={{
                 __html: AppRoutes[key as TgAppRouteNames].svg,
               }}
