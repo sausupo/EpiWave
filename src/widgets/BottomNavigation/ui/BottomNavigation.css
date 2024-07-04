@@ -8,11 +8,12 @@
 }
 
 .menu {
+  /* width: 100%; */
   display: flex;
   gap: 4px;
   background-color: var(--second-black);
   border-radius: 16px;
-  margin: 8px;
+  margin-bottom: 16px;
   padding: 4px;
 }
 
@@ -39,8 +40,8 @@
 
 .navbar--icon {
   fill: var(--white);
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
 }
 
 .navbar--icon--disabled {
