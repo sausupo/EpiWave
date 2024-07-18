@@ -6,6 +6,8 @@ import { useState } from "react";
 import { ENERGY_DECREMENT, INCREMENT_VALUE } from "../../../shared/config";
 import { v4 as uuidv4 } from 'uuid';
 import clickerBgVideo from "../../../assets/2.mp4";
+import { useRef } from "react";
+import axios from "axios";
 
 interface NumberPosition {
   id: string;
@@ -13,14 +15,46 @@ interface NumberPosition {
   top: number;
 }
 
+
 export default function Clicker(): JSX.Element {
   const {increment, energyDecrement, energy} = useClicker((state) => state);
 
   const [numbers, setNumbers] = useState<NumberPosition[]>([]);
   const [scaleX, setScaleX] = useState(1);
 
-  const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
+const timerDebounceRef = useRef<number>(0);
+
+const debounceRequest = () => {
+  if (timerDebounceRef.current){
+    clearTimeout(timerDebounceRef.current);
+  }
+
+  timerDebounceRef.current = setTimeout(() => {
+    axios.post('http://localhost:3000/taps', {
+      userId: 123,
+      coinsAmount: 123
+    });
+  }, 5000);
+}
+
+  const handleClick = (event: MouseEventHandler<HTMLDivElement>) => {
+    const {clientX, clientY} = event;
     increment();
+    debounceRequest();
+    energyDecrement();
+    WebApp.HapticFeedback.impactOccurred("light");
+
+    setNumbers([{
+      id: uuidv4(),
+      left: clientX,
+      top: clientY,
+    }]);
+    setScaleX(0.98);
+  }
+
+  const handleTap = (event: React.TouchEvent<HTMLDivElement>) => {
+    increment();
+    debounceRequest();
     energyDecrement();
     WebApp.HapticFeedback.impactOccurred("light");
     const { touches } = event;
@@ -58,21 +92,22 @@ export default function Clicker(): JSX.Element {
         />
         
       ))}
-      <div
-      onTouchStart={energy > ENERGY_DECREMENT ? handleClick : () => {}}
-      onTouchEnd={handleTouchEnd}
-      className="clicker"
-      style={{ transform: `scaleX(${scaleX})` }}
-    >
-      <div className="glass">
-        <img src={clicker} className="home-page__ff" alt="coin" />
-        <video className="clicker-bg" playsInline autoPlay muted loop id="bgvid">
-          <source src={clickerBgVideo} type="video/mp4"/>
-        </video>
+        <div
+          onMouseDown={handleClick}
+          onMouseUp={handleTouchEnd}
+          onTouchStart={energy > ENERGY_DECREMENT ? handleTap : () => {}}
+          onTouchEnd={handleTouchEnd}
+          className="clicker"
+          style={{ transform: `scaleX(${scaleX})` }}
+        >
+        <div className="glass">
+          <img src={clicker} className="home-page__ff" alt="coin" />
+          <video className="clicker-bg" playsInline autoPlay muted loop id="bgvid">
+            <source src={clickerBgVideo} type="video/mp4"/>
+          </video>
+        </div>
       </div>
-    </div>
-      </>
-    
+    </>
   );
 }
 

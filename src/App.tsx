@@ -21,6 +21,7 @@ function App() {
   const videoRef2 = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    //тут поменять на вызыво методов бэка
     window.addEventListener('beforeunload', () => sendData(count, energy));
     window.addEventListener('unload', () => sendData(count, energy));
 

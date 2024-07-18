@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { ENERGY_DECREMENT, ENERGY_INCREMENT, ENERGY_MAX, INCREMENT_VALUE } from "../../shared/config";
-import WebApp from "@twa-dev/sdk";
+import axios from "axios";
 
 type Store = {
     clickable: boolean;
@@ -21,20 +21,29 @@ const useClicker = create<Store & Actions>((set) => ({
     isLoading: false,
     energy: 1450,
     count: 0,
-    init: () => {
-        WebApp.CloudStorage.getItems(["count", "energy"], (error, result) => {
-            if (!error && result) {
-                set({
-                    count: result.count ? Number(result.count) : 5000,
-                    energy: result.energy ? Number(result.energy) : 1500,
-                    isLoading: false,
-                })
-            } else {
-                set({
-                    isLoading: false,
-                })
-            };
-        });
+    init: async() => {
+        const {data} = await axios.post('http://localhost:3000/users/getUser', {
+            userId: 123,
+          });
+        const [result] = data;
+        set({
+            count: result.coinsAmount ? Number(result.coinsAmount) : 5000,
+            energy: result.energy ? Number(result.energy) : 1500,
+            isLoading: false,
+        })
+        // WebApp.CloudStorage.getItems(["count", "energy"], (error, result) => {
+        //     if (!error && result) {
+        //         set({
+        //             count: result.count ? Number(result.count) : 5000,
+        //             energy: result.energy ? Number(result.energy) : 1500,
+        //             isLoading: false,
+        //         })
+        //     } else {
+        //         set({
+        //             isLoading: false,
+        //         })
+        //     };
+        // });
     },
     increment: () => {
         set((state) => ({
