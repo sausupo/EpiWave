@@ -14,7 +14,7 @@ export default function Home(): JSX.Element {
   useEffect(() => {
     const intervalId = setInterval(() => {
       energyIncrement();
-    }, 500);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);

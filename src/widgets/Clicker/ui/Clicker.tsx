@@ -14,10 +14,9 @@ interface NumberPosition {
   left: number;
   top: number;
 }
-
-
+const userId = WebApp.initDataUnsafe.user.id;
 export default function Clicker(): JSX.Element {
-  const {increment, energyDecrement, energy} = useClicker((state) => state);
+  const {increment, energyDecrement, energy, count, setCoinsPerTapAmount, coinsPerTapAmount} = useClicker((state) => state);
 
   const [numbers, setNumbers] = useState<NumberPosition[]>([]);
   const [scaleX, setScaleX] = useState(1);
@@ -29,11 +28,16 @@ const debounceRequest = () => {
     clearTimeout(timerDebounceRef.current);
   }
 
-  timerDebounceRef.current = setTimeout(() => {
-    axios.post('http://localhost:3000/taps', {
-      userId: 123,
-      coinsAmount: 123
+  timerDebounceRef.current = setTimeout(async() => {
+    const {data} = await axios.post('http://localhost:3000/taps', {
+      userId,
+      coinsAmount: count
     });
+
+    const [result] = data;
+    console.log(result)
+    setCoinsPerTapAmount(result.coinsPerTapAmount);
+
   }, 5000);
 }
 
@@ -86,6 +90,7 @@ const debounceRequest = () => {
     <>
      {numbers.map((number) => (
         <AnimatedNumber
+          coinsPerTapAmount={coinsPerTapAmount}
           key={number.id}
           number={number}
           onAnimationEnd={() => removeNumber(number.id)}
@@ -112,16 +117,17 @@ const debounceRequest = () => {
 }
 
 const AnimatedNumber: React.FC<{
+  coinsPerTapAmount: Number
   number: NumberPosition;
   onAnimationEnd: () => void;
-}> = ({ number, onAnimationEnd }) => {
+}> = ({coinsPerTapAmount, number, onAnimationEnd }) => {
   return (
     <div
       className="animated-number"
       style={{ left: number.left, top: number.top }}
       onAnimationEnd={onAnimationEnd}
     >
-      {`+${INCREMENT_VALUE}`}
+      {`+${coinsPerTapAmount}`}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { ENERGY_DECREMENT, ENERGY_INCREMENT, ENERGY_MAX, INCREMENT_VALUE } from "../../shared/config";
+import WebApp from "@twa-dev/sdk";
 import axios from "axios";
 
 type Store = {
@@ -7,6 +8,7 @@ type Store = {
     isLoading: boolean;
     energy: number;
     count: number;
+    coinsPerTapAmount: number;
 }
 
 type Actions = {
@@ -21,33 +23,25 @@ const useClicker = create<Store & Actions>((set) => ({
     isLoading: false,
     energy: 1450,
     count: 0,
+    coinsPerTapAmount: 0, 
     init: async() => {
+        const userId = WebApp.initDataUnsafe.user.id;
+
         const {data} = await axios.post('http://localhost:3000/users/getUser', {
-            userId: 123,
+            userId,
           });
         const [result] = data;
+        console.log(result)
         set({
             count: result.coinsAmount ? Number(result.coinsAmount) : 5000,
             energy: result.energy ? Number(result.energy) : 1500,
+            coinsPerTapAmount: result.coinsPerTapAmount ? Number(result.coinsPerTapAmount) : INCREMENT_VALUE,
             isLoading: false,
         })
-        // WebApp.CloudStorage.getItems(["count", "energy"], (error, result) => {
-        //     if (!error && result) {
-        //         set({
-        //             count: result.count ? Number(result.count) : 5000,
-        //             energy: result.energy ? Number(result.energy) : 1500,
-        //             isLoading: false,
-        //         })
-        //     } else {
-        //         set({
-        //             isLoading: false,
-        //         })
-        //     };
-        // });
     },
     increment: () => {
         set((state) => ({
-            count: state.count + INCREMENT_VALUE,
+            count: state.count + state.coinsPerTapAmount,
         }))
     },
     energyIncrement: () => {
@@ -64,6 +58,11 @@ const useClicker = create<Store & Actions>((set) => ({
             energy: state.energy - ENERGY_DECREMENT,
         }))
     },
+    setCoinsPerTapAmount: (val) => {
+        set(() => ({
+            coinsPerTapAmount: val
+        }))
+    }
 }))
 
 export default useClicker;
