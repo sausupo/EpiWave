@@ -16,6 +16,7 @@ type Actions = {
     increment: () => void;
     energyIncrement: () => void;
     energyDecrement: () => void;
+    setCoinsPerTapAmount: (val: number) => void;
 }
 
 const useClicker = create<Store & Actions>((set) => ({
@@ -25,7 +26,7 @@ const useClicker = create<Store & Actions>((set) => ({
     count: 0,
     coinsPerTapAmount: 0, 
     init: async() => {
-        const userId = WebApp.initDataUnsafe.user.id;
+        const userId = WebApp.initDataUnsafe.user?.id;
 
         const {data} = await axios.post('http://localhost:3000/users/getUser', {
             userId,

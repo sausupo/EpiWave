@@ -7,29 +7,12 @@ import TgAppRoutes from "./routes/tgAppRoutes/ui/TgAppRoutes";
 import bgMain from "./assets/bg.mp4";
 import useClicker from "./store/useClicker";
 
-const sendData = (count: number, energy: number) => {
-  WebApp.CloudStorage.setItem("count", String(count));
-  WebApp.CloudStorage.setItem("energy", String(energy));
-}
-
 function App() {
   const userDataInit = useUserData((state) => state.init);
   const clickerInit = useClicker(state => state.init);
   const clickerIsLoading = useClicker(state => state.isLoading);
-  const {count, energy} = useClicker(state => state);
 
   const videoRef2 = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    //тут поменять на вызыво методов бэка
-    window.addEventListener('beforeunload', () => sendData(count, energy));
-    window.addEventListener('unload', () => sendData(count, energy));
-
-    // return () => {
-    //   window.removeEventListener('beforeunload', () => sendData(count, energy));
-    //   window.addEventListener('unload', () => sendData(count, energy));
-    // };
-  }, [count, energy]);
 
   useEffect(() => {
     clickerInit();

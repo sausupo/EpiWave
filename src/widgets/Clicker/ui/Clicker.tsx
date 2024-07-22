@@ -3,7 +3,7 @@ import useClicker from "../../../store/useClicker";
 import clicker from "../../../assets/clicker.png";
 import "./Clicker.css";
 import { useState } from "react";
-import { ENERGY_DECREMENT, INCREMENT_VALUE } from "../../../shared/config";
+import { ENERGY_DECREMENT } from "../../../shared/config";
 import { v4 as uuidv4 } from 'uuid';
 import clickerBgVideo from "../../../assets/2.mp4";
 import { useRef } from "react";
@@ -14,14 +14,14 @@ interface NumberPosition {
   left: number;
   top: number;
 }
-const userId = WebApp.initDataUnsafe.user.id;
+const userId = WebApp.initDataUnsafe.user?.id;
 export default function Clicker(): JSX.Element {
   const {increment, energyDecrement, energy, count, setCoinsPerTapAmount, coinsPerTapAmount} = useClicker((state) => state);
 
   const [numbers, setNumbers] = useState<NumberPosition[]>([]);
   const [scaleX, setScaleX] = useState(1);
 
-const timerDebounceRef = useRef<number>(0);
+const timerDebounceRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 const debounceRequest = () => {
   if (timerDebounceRef.current){
@@ -35,24 +35,16 @@ const debounceRequest = () => {
     });
 
     const [result] = data;
-    console.log(result)
     setCoinsPerTapAmount(result.coinsPerTapAmount);
-
   }, 5000);
 }
 
-  const handleClick = (event: MouseEventHandler<HTMLDivElement>) => {
-    const {clientX, clientY} = event;
+  const handleClick = () => {
     increment();
     debounceRequest();
     energyDecrement();
     WebApp.HapticFeedback.impactOccurred("light");
 
-    setNumbers([{
-      id: uuidv4(),
-      left: clientX,
-      top: clientY,
-    }]);
     setScaleX(0.98);
   }
 
