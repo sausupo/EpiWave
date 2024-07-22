@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ENERGY_DECREMENT, ENERGY_INCREMENT, ENERGY_MAX, INCREMENT_VALUE } from "../../shared/config";
+import { API, ENERGY_DECREMENT, ENERGY_INCREMENT, ENERGY_MAX, INCREMENT_VALUE } from "../../shared/config";
 import WebApp from "@twa-dev/sdk";
 import axios from "axios";
 
@@ -28,11 +28,11 @@ const useClicker = create<Store & Actions>((set) => ({
     init: async() => {
         const userId = WebApp.initDataUnsafe.user?.id;
 
-        const {data} = await axios.post('http://localhost:3000/users/getUser', {
+        const {data} = await axios.post(`${API}/users/getUser`, {
             userId,
           });
         const [result] = data;
-        console.log(result)
+
         set({
             count: result.coinsAmount ? Number(result.coinsAmount) : 5000,
             energy: result.energy ? Number(result.energy) : 1500,

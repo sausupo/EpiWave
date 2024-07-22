@@ -3,7 +3,7 @@ import useClicker from "../../../store/useClicker";
 import clicker from "../../../assets/clicker.png";
 import "./Clicker.css";
 import { useState } from "react";
-import { ENERGY_DECREMENT } from "../../../shared/config";
+import { API, ENERGY_DECREMENT } from "../../../shared/config";
 import { v4 as uuidv4 } from 'uuid';
 import clickerBgVideo from "../../../assets/2.mp4";
 import { useRef } from "react";
@@ -29,7 +29,7 @@ const debounceRequest = () => {
   }
 
   timerDebounceRef.current = setTimeout(async() => {
-    const {data} = await axios.post('http://localhost:3000/taps', {
+    const {data} = await axios.post(`${API}/taps`, {
       userId,
       coinsAmount: count
     });
